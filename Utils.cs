@@ -4,7 +4,7 @@ namespace millionaire
     {
         public static void AddQuestionsAndAnswers()
         {
-
+            
         }
     }
 }
