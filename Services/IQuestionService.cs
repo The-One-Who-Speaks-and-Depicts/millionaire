@@ -6,5 +6,6 @@ namespace millionaire.Services
     public interface IQuestionService
     {
         List<Question> GetAllQuestions();
+        List<Question> GetGivenAmountOfQuestions(int amount);
     }
 }

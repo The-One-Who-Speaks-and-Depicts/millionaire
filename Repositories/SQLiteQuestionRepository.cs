@@ -16,5 +16,15 @@ namespace millionaire.Repos
                 return questions;
             }            
         }
+
+        public List<Question> GetGivenAmountOfQuestions(int amount)
+        {
+            using (var db = new MillionaireContext())
+            {
+                var rand = new Random();
+                var questions = db.Questions.OrderBy(x=>rand.Next()).Take(amount).ToList();
+                return questions;
+            }
+        }
     }
 }
