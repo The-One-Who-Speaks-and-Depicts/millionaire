@@ -1,4 +1,6 @@
-﻿@{
+﻿@model AmountStorager
+
+@{
     ViewData["Title"] = "Millionaire";
 }
 
@@ -6,17 +8,15 @@
     <div>
         <h1 class="display-4">Wanna become a millionaire?</h1>
         <p>Probably, firstly you should the <a asp-area="" asp-controller="Home" asp-action="Rules">rules</a>.</p>
-        <p>If ready to try your luck, choose, how many questions you want to be asked.</p>
+        <p>If ready to try your luck, choose, how many questions you want to be asked.</p>        
     </div>
     <form asp-controller="Home" asp-action="Game">
-        <select>
-            @{
-                for(int i = 1; i < 6; i++)
-                {
-                    <option>@i</option>
-                }
+        <select asp-for="amount">
+            @for(int i = 1; i < 6; i++)
+            {
+                <option>@i</option>
             }
-        </select><br /><br />
+        </select>
         <button class="btn btn-primary">Go!</button>
     </form>
 </div>

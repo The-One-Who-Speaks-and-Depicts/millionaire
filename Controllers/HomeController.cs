@@ -21,7 +21,7 @@ namespace millionaire.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(new AmountStorager());
         }
 
         public IActionResult Rules()
@@ -29,9 +29,11 @@ namespace millionaire.Controllers
             return View();
         }
 
-        public void Game() 
+        public IActionResult Game(int amount) 
         {
-            Console.WriteLine("");
+            Game game = new();
+            game.amount = amount;
+            return View(game);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
