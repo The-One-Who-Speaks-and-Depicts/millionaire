@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using millionaire.Data;
+using millionaire.Models;
 
 namespace millionaire
 {
@@ -13,6 +15,7 @@ namespace millionaire
     {
         public static void Main(string[] args)
         {
+            Utils.AddQuestionsAndAnswers();
             CreateHostBuilder(args).Build().Run();
         }
 
