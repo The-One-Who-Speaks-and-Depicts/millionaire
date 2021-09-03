@@ -8,6 +8,5 @@ namespace millionaire.Models
         [Key]
         public int Id {get; set;}
         public string text {get; set;}
-        public ICollection<Answer> answers;
     } 
 }
