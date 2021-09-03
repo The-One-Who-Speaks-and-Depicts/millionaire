@@ -5,5 +5,9 @@
 }
 
 <div class="text-center">
-    @Model.questions.Count
+    <button class="btn btn-primary">50:50</button>
+    <div id="score">Score: @Model.score</div>
+    <div id="question">
+    @Model.answers.Count
+    </div>
 </div>

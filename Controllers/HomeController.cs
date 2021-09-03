@@ -12,8 +12,7 @@ using millionaire.Services;
 namespace millionaire.Controllers
 {
     public class HomeController : Controller
-    {
-        private readonly SQLiteQuestionService _sqliteservice = new(new SQLiteQuestionRepository()); 
+    {        
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -33,10 +32,7 @@ namespace millionaire.Controllers
 
         public IActionResult Game(int amount) 
         {
-            Game game = new();
-            game.amount = amount;
-            game.questions = _sqliteservice.GetGivenAmountOfQuestions(amount);
-            return View(game);
+            return View(new Game(amount));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
