@@ -7,7 +7,7 @@
 <div class="text-center">
     <button class="btn btn-primary">50:50</button>
     <div id="score">Score: @Model.score</div>
-    <div id="question">
-    @Model.answers.Count
-    </div>
+    <form asp-controller="Home" asp-action="Index">
+        <button class="btn btn-primary">Start over!</button>
+    </form>    
 </div>
