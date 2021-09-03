@@ -15,15 +15,7 @@ namespace millionaire
     public class Program
     {
         public static void Main(string[] args)
-        {
-            try 
-            {
-                Utils.AddQuestionsAndAnswers();
-            }
-            catch 
-            {
-                Debug.WriteLine("No SQLite database found!");
-            }            
+        {  
             CreateHostBuilder(args).Build().Run();
         }
 
