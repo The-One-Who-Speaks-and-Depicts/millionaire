@@ -24,6 +24,10 @@ namespace millionaire.Controllers
 
         public IActionResult Index()
         {
+            if (game != null)
+            {
+                game = null;
+            }
             return View(new AmountStorager());
         }
 
@@ -44,9 +48,14 @@ namespace millionaire.Controllers
                 if (game.score < millionaire.Models.Game.maxScore)
                 {
                     game.score += game.step;
-                }
+                    if (millionaire.Models.Game.maxScore - game.score == game.mod)
+                    {
+                        game.score = millionaire.Models.Game.maxScore;
+                    }
+                }                
                 else 
                 {
+                    game = null;
                     return Redirect("/Home/Index");
                 }                
                 if (game.questions.Count > 1)
