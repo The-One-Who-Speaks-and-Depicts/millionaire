@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using millionaire.Models;
+using millionaire.Repos;
+using millionaire.Services;
 
 namespace millionaire.Controllers
 {
     public class HomeController : Controller
     {
-        
+        private readonly SQLiteQuestionService _sqliteservice = new(new SQLiteQuestionRepository()); 
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -33,6 +35,7 @@ namespace millionaire.Controllers
         {
             Game game = new();
             game.amount = amount;
+            game.questions = _sqliteservice.GetGivenAmountOfQuestions(amount);
             return View(game);
         }
 
