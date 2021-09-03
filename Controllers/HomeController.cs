@@ -67,10 +67,12 @@ namespace millionaire.Controllers
                     {
                         game.questions = game.questions.Where(x => x != game.questions[0]).ToList();
                     }
+                    if (game.score == millionaire.Models.Game.maxScore) game.result = "You won!";
                 }
                 else 
                 {
                     game.gameOver = true;
+                    game.result = "You lost!";
                 }                                
             }
             return View(game);

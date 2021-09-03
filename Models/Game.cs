@@ -19,6 +19,7 @@ namespace millionaire.Models
         public List<Answer> answers {get; set;}
         public string chosenAnswer {get; set;}
         public bool gameOver = false;
+        public string result {get; set;}
 
         public Game(int _amount)
         {
