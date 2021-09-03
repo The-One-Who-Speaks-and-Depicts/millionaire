@@ -11,147 +11,151 @@ namespace millionaire
         {
             using (var db = new MillionaireContext())
             {
+                foreach (var item in db.Questions)
+                {
+                    db.Questions.Remove(item);
+                }
+                foreach (var item in db.Answers)
+                {
+                    db.Answers.Remove(item);
+                }
+                db.SaveChanges();
+                var answers = new List<Answer>()
+                {
+                    new Answer()
+                    {
+                        Id = 1,
+                        text = "Maestro",
+                        correct = "True",
+                        questionId = 1,
+                    },
+                    new Answer()
+                    {
+                        Id = 2,
+                        text = "Alaric",
+                        correct = "False",
+                        questionId = 1,
+                    },
+                    new Answer()
+                    {
+                        Id = 3,
+                        text = "Stilico",
+                        correct = "False",
+                        questionId = 1,
+                    },
+                    new Answer()
+                    {
+                        Id = 4,
+                        text = "Obelix",
+                        correct = "False",
+                        questionId = 1,
+                    },
+                    new Answer()
+                    {
+                        Id = 5,
+                        text = "Asterix",
+                        correct = "False",
+                        questionId = 2,
+                    },
+                    new Answer()
+                    {
+                        Id = 6,
+                        text = "Alaric",
+                        correct = "False",
+                        questionId = 2,
+                    },
+                    new Answer()
+                    {
+                        Id = 7,
+                        text = "Stilico",
+                        correct = "True",
+                        questionId = 2,
+                    },
+                    new Answer()
+                    {
+                        Id = 8,
+                        text = "Obelix",
+                        correct = "False",
+                        questionId = 2,
+                    },
+                    new Answer()
+                    {
+                        Id = 9,
+                        text = "Moscow",
+                        correct = "True",
+                        questionId = 3,
+                    },
+                    new Answer()
+                    {
+                        Id = 10,
+                        text = "Saint Petersburg",
+                        correct = "False",
+                        questionId = 3,
+                    },
+                    new Answer()
+                    {
+                        Id = 11,
+                        text = "Paris",
+                        correct = "False",
+                        questionId = 3,
+                    },
+                    new Answer()
+                    {
+                        Id = 12,
+                        text = "London",
+                        correct = "False",
+                        questionId = 3,
+                    },
+                    new Answer()
+                    {
+                        Id = 13,
+                        text = "435",
+                        correct = "False",
+                        questionId = 4,
+                    },
+                    new Answer()
+                    {
+                        Id = 14,
+                        text = "476",
+                        correct = "True",
+                        questionId = 4,
+                    },
+                    new Answer()
+                    {
+                        Id = 15,
+                        text = "500",
+                        correct = "False",
+                        questionId = 4,
+                    },
+                    new Answer()
+                    {
+                        Id = 16,
+                        text = "301",
+                        correct = "False",
+                        questionId = 4,
+                    },
+                };
+                foreach (var answer in answers)
+                {
+                    db.Add(answer);
+                }
                 db.Add(new Question {
                     Id = 1,
-                    text = "Who loves Paris?",
-                    answers = new List<Answer>()
-                    {
-                        new Answer()
-                        {
-                            Id = 1,
-                            text = "Maestro",
-                            correct = "True",
-                            questionId = 1,
-                        },
-                        new Answer()
-                        {
-                            Id = 2,
-                            text = "Alaric",
-                            correct = "False",
-                            questionId = 1,
-                        },
-                        new Answer()
-                        {
-                            Id = 3,
-                            text = "Stilico",
-                            correct = "False",
-                            questionId = 1,
-                        },
-                        new Answer()
-                        {
-                            Id = 4,
-                            text = "Obelix",
-                            correct = "False",
-                            questionId = 1,
-                        },
-                    }
+                    text = "Who loves Paris?",                    
                 });
                 db.Add(new Question {
                     Id = 2,
                     text = "Who was the most famous German Roman commander?",
-                    answers = new List<Answer>()
-                    {
-                        new Answer()
-                        {
-                            Id = 5,
-                            text = "Asterix",
-                            correct = "False",
-                            questionId = 2,
-                        },
-                        new Answer()
-                        {
-                            Id = 6,
-                            text = "Alaric",
-                            correct = "False",
-                            questionId = 2,
-                        },
-                        new Answer()
-                        {
-                            Id = 7,
-                            text = "Stilico",
-                            correct = "True",
-                            questionId = 2,
-                        },
-                        new Answer()
-                        {
-                            Id = 8,
-                            text = "Obelix",
-                            correct = "False",
-                            questionId = 2,
-                        },
-                    }
                 });
                 db.Add(new Question {
                     Id = 3,
                     text = "Which city proclaimed itself to be the Third Rome?",
-                    answers = new List<Answer>()
-                    {
-                        new Answer()
-                        {
-                            Id = 9,
-                            text = "Moscow",
-                            correct = "True",
-                            questionId = 3,
-                        },
-                        new Answer()
-                        {
-                            Id = 10,
-                            text = "Saint Petersburg",
-                            correct = "False",
-                            questionId = 3,
-                        },
-                        new Answer()
-                        {
-                            Id = 11,
-                            text = "Paris",
-                            correct = "False",
-                            questionId = 3,
-                        },
-                        new Answer()
-                        {
-                            Id = 12,
-                            text = "London",
-                            correct = "False",
-                            questionId = 3,
-                        },
-                    }
                 });
                 db.Add(new Question {
                     Id = 4,
                     text = "When did the Rome fall?",
-                    answers = new List<Answer>()
-                    {
-                        new Answer()
-                        {
-                            Id = 13,
-                            text = "435",
-                            correct = "False",
-                            questionId = 4,
-                        },
-                        new Answer()
-                        {
-                            Id = 14,
-                            text = "476",
-                            correct = "True",
-                            questionId = 4,
-                        },
-                        new Answer()
-                        {
-                            Id = 15,
-                            text = "500",
-                            correct = "False",
-                            questionId = 4,
-                        },
-                        new Answer()
-                        {
-                            Id = 16,
-                            text = "301",
-                            correct = "False",
-                            questionId = 4,
-                        },
-                    }
                 });
-                db.Add(new Question {
+                /*db.Add(new Question {
                     Id = 5,
                     text = "What was the INITIAL name of the Eastern Roman Empire capital?",
                     answers = new List<Answer>()
@@ -535,7 +539,7 @@ namespace millionaire
                             questionId = 15,
                         },
                     }
-                });
+                });*/
                 db.SaveChanges();
             }
         }
