@@ -22,7 +22,7 @@ namespace millionaire.Repos
             using (var db = new MillionaireContext())
             {
                 var rand = new Random();
-                var questions = db.Questions.AsEnumerable().OrderBy(x=>rand.Next()).Take(amount + 1).ToList();
+                var questions = db.Questions.AsEnumerable().OrderBy(x=>rand.Next()).Take(amount).ToList();
                 return questions;
             }
         }
