@@ -15,6 +15,8 @@ namespace millionaire.Controllers
     {        
         private readonly ILogger<HomeController> _logger;
 
+        private static Game game;
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -32,7 +34,27 @@ namespace millionaire.Controllers
 
         public IActionResult Game(int amount) 
         {
-            return View(new Game(amount));
+            if (game == null) 
+            {
+                game = new Game(amount); 
+            }
+            else
+            {
+                game.amount = amount;
+                if (game.score < millionaire.Models.Game.maxScore)
+                {
+                    game.score += game.step;
+                }
+                else 
+                {
+                    return Redirect("/Home/Index");
+                }                
+                if (game.questions.Count > 1)
+                {
+                    game.questions = game.questions.Where(x => x != game.questions[0]).ToList();
+                }                
+            }
+            return View(game);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

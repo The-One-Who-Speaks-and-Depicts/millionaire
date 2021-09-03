@@ -6,9 +6,14 @@
 
 <div class="text-center">
     <button class="btn btn-primary">50:50</button>
-    <div id="score">Score: @Model.score</div>
-    <form asp-contoller="Game" asp-action="Loop">
-
+    <form asp-controller="Home" asp-action="Game">
+        <div id="score">Score: @Model.score</div>
+        @Model.questions[0].text<br>
+        @foreach(var item in Model.answers.Where(x => x.questionId == Model.questions[0].Id))
+        {
+            <input type="radio" name="user-answer" />@item.text<br />
+        }
+        <button class="btn btn-primary">Submit answer</button><br />
     </form>
     <form asp-controller="Home" asp-action="Index">
         <button class="btn btn-primary">Start over!</button>

@@ -17,10 +17,10 @@ namespace millionaire.Models
         public List<Question> questions {get; set;}
         public List<Answer> answers {get; set;}
 
-        public Game(int _amount)
+        public Game(int _amount, int _nextQuestion = 0, int _score = 0)
         {
-            currentQuestion = 0;
-            score = 0;
+            currentQuestion = _nextQuestion;
+            score = _score;
             amount = _amount;
             step = maxScore/amount;
             sqlitequestionservice = new(new SQLiteQuestionRepository());
