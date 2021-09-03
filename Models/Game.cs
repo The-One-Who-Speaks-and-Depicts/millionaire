@@ -17,6 +17,7 @@ namespace millionaire.Models
         private readonly SQLiteAnswerService sqliteanswerservice;
         public List<Question> questions {get; set;}
         public List<Answer> answers {get; set;}
+        public string chosenAnswer {get; set;}
 
         public Game(int _amount)
         {
