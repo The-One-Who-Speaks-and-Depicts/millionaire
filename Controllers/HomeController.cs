@@ -67,6 +67,10 @@ namespace millionaire.Controllers
                     {
                         game.questions = game.questions.Where(x => x != game.questions[0]).ToList();
                     }
+                }
+                else 
+                {
+                    game.gameOver = true;
                 }                                
             }
             return View(game);

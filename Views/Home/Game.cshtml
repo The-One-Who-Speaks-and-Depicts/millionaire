@@ -8,7 +8,7 @@
     <button class="btn btn-primary">50:50</button>
     <form asp-controller="Home" asp-action="Game">
         <div id="score">Score: @Model.score</div>
-        @if (@Model.score < millionaire.Models.Game.maxScore)
+        @if (@Model.score < millionaire.Models.Game.maxScore && !@Model.gameOver)
         {
             @Model.questions[0].text<br>
             @foreach(var item in Model.answers.Where(x => x.questionId == Model.questions[0].Id))
