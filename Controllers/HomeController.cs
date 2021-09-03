@@ -37,14 +37,16 @@ namespace millionaire.Controllers
         }
 
         public IActionResult Game(int amount) 
-        {
+        {            
             if (game == null) 
             {
                 game = new Game(amount); 
             }
             else
             {
-                int chosenAnswer = Convert.ToInt32(Request.Form["user-answer"]);
+                var userAnswer = Request.Form["user-answer"];
+                if (String.IsNullOrEmpty(userAnswer.ToString())) return View(game);
+                int chosenAnswer = Convert.ToInt32(userAnswer);
                 if (game.answers.Where(x => x.Id == chosenAnswer).First().correct == "True")
                 {
                     game.amount = amount;
