@@ -16,7 +16,18 @@ namespace tests
 
             var indexPage = hc.Index();
 
-            Assert.NotNull(hc.Index());
+            Assert.NotNull(indexPage);
+        }
+
+        [Fact]
+        public void RulesTest()
+        {
+            var logger = new Mock<ILogger<HomeController>>();
+            HomeController hc = new(logger.Object);
+
+            var rulesPage = hc.Rules();
+
+            Assert.NotNull(rulesPage);
         }
     }
 }
