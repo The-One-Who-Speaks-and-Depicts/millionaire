@@ -14,6 +14,8 @@ namespace millionaire.Controllers
     public class HomeController : Controller
     {        
         private readonly ILogger<HomeController> _logger;
+        private static SQLiteQuestionService questionService;
+        private static SQLiteAnswerService answerService;
 
         private static Game game;
 
@@ -47,7 +49,11 @@ namespace millionaire.Controllers
                 default:                    
                     if (game == null) 
                     {
-                        game = new Game(amount); 
+                        game = new Game(amount);
+                        questionService = new(new SQLiteQuestionRepository());
+                        answerService = new(new SQLiteAnswerRepository());
+                        game.questions = questionService.GetGivenAmountOfQuestions(amount);
+                        game.answers = answerService.GetGivenAmountOfAnswers(game.questions.Select(x => x.Id).ToList()); 
                     }
                     else
                     {

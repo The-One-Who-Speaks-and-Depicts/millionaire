@@ -32,11 +32,7 @@ namespace millionaire.Models
             {
                 mod = maxScore % amount;
             }
-            step = maxScore/amount;
-            sqlitequestionservice = new(new SQLiteQuestionRepository());
-            sqliteanswerservice = new(new SQLiteAnswerRepository());
-            questions = sqlitequestionservice.GetGivenAmountOfQuestions(amount);
-            answers = sqliteanswerservice.GetGivenAmountOfAnswers(questions.Select(x => x.Id).ToList());
+            step = maxScore/amount;            
         }
     }
 }
