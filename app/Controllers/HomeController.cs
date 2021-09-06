@@ -54,7 +54,15 @@ namespace millionaire.Controllers
                         if (game.fifty_fifty_used == "Now") {
                             game.fifty_fifty_used = "Yes";
                         }
-                        var userAnswer = Request.Form["user-answer"];
+                        Microsoft.Extensions.Primitives.StringValues userAnswer;
+                        try 
+                        {
+                            userAnswer = Request.Form["user-answer"];
+                        }
+                        catch (Exception)
+                        {
+                            return View(game);
+                        }
                         if (String.IsNullOrEmpty(userAnswer.ToString())) return View(game);
                         int chosenAnswer = Convert.ToInt32(userAnswer);
                         if (game.answers.Where(x => x.Id == chosenAnswer).First().correct == "True")
