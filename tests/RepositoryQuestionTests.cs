@@ -15,10 +15,6 @@ namespace tests
             var mockRepo = new MockQuestionRepository();
 
             var questions = mockRepo.GetGivenAmountOfQuestions(15);
-            for (int i = 0; i < questions.Capacity; i++)
-            {
-                questions.Add(new Question());
-            }            
 
             Assert.Equal(15, questions.Count);            
         }
