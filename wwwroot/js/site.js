@@ -3,7 +3,23 @@
 
 // Write your JavaScript code.
 
-var fifty = document.getElementById("Yes");
-if (fifty !== null) {
-    fifty.disabled = true;
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; 
+}
+
+var fifty_used = document.getElementById("Yes");
+var fifty_being_used = document.getElementById("Now");
+if (fifty_used !== null) {
+    fifty_used.disabled = true;
+}
+if (fifty_being_used !== null) {
+    fifty_being_used.disabled = true;
+    const incorrects = document.getElementsByClassName("False");
+    var results = [0, 1, 2]
+            .sort(function() { return .5 - Math.random() }) // Shuffle array
+            .slice(0, 2); // Get first 2 items
+    incorrects[results[0]].setAttribute("class", "hidden");
+    incorrects[results[1]].setAttribute("class", "hidden");
 }

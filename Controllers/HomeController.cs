@@ -41,16 +41,19 @@ namespace millionaire.Controllers
             switch (submit)
             {
                 case "Fifty":
-                    game.fifty_fifty_used = "Yes";
+                    game.fifty_fifty_used = "Now";
                     break;
                 case "Answer":
-                default:
+                default:                    
                     if (game == null) 
                     {
                         game = new Game(amount); 
                     }
                     else
                     {
+                        if (game.fifty_fifty_used == "Now") {
+                            game.fifty_fifty_used = "Yes";
+                        }
                         var userAnswer = Request.Form["user-answer"];
                         if (String.IsNullOrEmpty(userAnswer.ToString())) return View(game);
                         int chosenAnswer = Convert.ToInt32(userAnswer);
