@@ -5,17 +5,18 @@
 }
 
 <div class="text-center">
-    <button class="btn btn-primary">50:50</button>
+    
     <form asp-controller="Home" asp-action="Game">
+        <input name="submit" type="submit" id="@Model.fifty_fifty_used" value="Fifty" />
         <div id="score">Score: @Model.score</div>
         @if (@Model.score < millionaire.Models.Game.maxScore && !@Model.gameOver)
         {
             @Model.questions[0].text<br>
             @foreach(var item in Model.answers.Where(x => x.questionId == Model.questions[0].Id))
             {
-                <input type="radio" name="user-answer" asp-for="chosenAnswer" value="@item.Id" />@item.text<br />
+                <input class="@item.correct" type="radio" name="user-answer" asp-for="chosenAnswer" value="@item.Id" />@item.text<br />
             }
-            <button class="btn btn-primary">Submit answer</button>
+            <input name="submit" type="submit" id="submit" value="Answer" />
         }
     </form>
     <div>@Model.result</div><br />

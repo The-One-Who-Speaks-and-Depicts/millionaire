@@ -21,6 +21,8 @@ namespace millionaire.Models
         public bool gameOver = false;
         public string result {get; set;}
 
+        public string fifty_fifty_used = "No";
+
         public Game(int _amount)
         {
             currentQuestion = 0;
