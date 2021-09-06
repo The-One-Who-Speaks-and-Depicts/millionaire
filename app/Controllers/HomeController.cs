@@ -36,7 +36,7 @@ namespace millionaire.Controllers
             return View();
         }
 
-        public IActionResult Game(int amount, string submit) 
+        public IActionResult Game(int amount, string submit, string userAnswer = "") 
         {
             switch (submit)
             {
@@ -54,16 +54,17 @@ namespace millionaire.Controllers
                         if (game.fifty_fifty_used == "Now") {
                             game.fifty_fifty_used = "Yes";
                         }
-                        Microsoft.Extensions.Primitives.StringValues userAnswer;
+                        Microsoft.Extensions.Primitives.StringValues answer;
                         try 
                         {
-                            userAnswer = Request.Form["user-answer"];
+                            answer = Request.Form["user-answer"];
                         }
                         catch (Exception)
                         {
                             return View(game);
                         }
-                        if (String.IsNullOrEmpty(userAnswer.ToString())) return View(game);
+                        userAnswer = answer.ToString();
+                        if (String.IsNullOrEmpty(userAnswer)) return View(game);
                         int chosenAnswer = Convert.ToInt32(userAnswer);
                         if (game.answers.Where(x => x.Id == chosenAnswer).First().correct == "True")
                         {
