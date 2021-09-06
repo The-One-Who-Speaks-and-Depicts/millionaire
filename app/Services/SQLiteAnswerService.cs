@@ -12,8 +12,6 @@ namespace millionaire.Services
         {
             _answerRepo = answerRepo;
         }
-
-        public List<Answer> GetAllAnswers() => _answerRepo.GetAllAnswers();
         public List<Answer> GetGivenAmountOfAnswers(List<int> questionIds) => _answerRepo.GetGivenAmountOfAnswers(questionIds);
 
     }

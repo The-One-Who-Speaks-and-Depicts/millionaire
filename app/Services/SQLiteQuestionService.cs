@@ -12,8 +12,6 @@ namespace millionaire.Services
         {
             _questionRepo = questionRepo;
         }
-
-        public List<Question> GetAllQuestions() => _questionRepo.GetAllQuestions();
         public List<Question> GetGivenAmountOfQuestions(int amount) => _questionRepo.GetGivenAmountOfQuestions(amount);
 
     }

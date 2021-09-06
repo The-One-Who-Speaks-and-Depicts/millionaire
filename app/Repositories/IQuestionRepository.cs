@@ -1,11 +1,9 @@
 using millionaire.Models;
 using System.Collections.Generic;
-
-namespace millionaire.Services
+namespace millionaire.Repos
 {
-    public interface IQuestionService
+    public interface IQuestionRepository
     {
-        List<Question> GetAllQuestions();
         List<Question> GetGivenAmountOfQuestions(int amount);
     }
 }

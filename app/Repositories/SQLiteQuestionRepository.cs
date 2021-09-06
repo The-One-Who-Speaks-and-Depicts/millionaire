@@ -7,16 +7,6 @@ namespace millionaire.Repos
 {
     public class SQLiteQuestionRepository : IQuestionRepository
     {
-        public List<Question> GetAllQuestions()
-        {
-            using (var db = new MillionaireContext())
-            {
-                var rand = new Random();
-                var questions = db.Questions.OrderBy(x=>rand.Next()).ToList();
-                return questions;
-            }            
-        }
-
         public List<Question> GetGivenAmountOfQuestions(int amount)
         {
             using (var db = new MillionaireContext())
