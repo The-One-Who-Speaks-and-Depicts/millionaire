@@ -17,14 +17,10 @@ if (fifty_used !== null) {
 if (fifty_being_used !== null) {
     fifty_being_used.disabled = true;
     const incorrects = document.getElementsByClassName("False");
-    var results = [0, 1, 2]
-            .sort(function() { return .5 - Math.random() }) // Shuffle array
-            .slice(0, 2); // Get first 2 items
-    console.log(results);
-    incorrects[results[0]].children[0].disabled = true;
-    incorrects[results[1]].children[0].disabled = true;
-    console.log(incorrects);
-    incorrects[results[0]].setAttribute("class", "hidden");
-    console.log(incorrects);
-    incorrects[results[1]].setAttribute("class", "hidden");
+    let first = getRandomInt(0, incorrects.length);
+    incorrects[first].children[0].disabled = true;
+    incorrects[first].setAttribute("class", "hidden");
+    let second = getRandomInt(0, incorrects.length);
+    incorrects[second].children[0].disabled = true;
+    incorrects[second].setAttribute("class", "hidden");
 }
