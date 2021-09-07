@@ -1,8 +1,8 @@
 # How to play
-![random_screenshot](https://github.com/The-One-Who-Speaks-and-Depicts/millionaire/blob/master/app/wwwroot/imgs/random.png)
+![random_screenshot](https://github.com/The-One-Who-Speaks-and-Depicts/millionaire/blob/master/app/wwwroot/imgs/random.png?raw=true)
 
 ## Welcome page
-![welcome_screenshot](https://github.com/The-One-Who-Speaks-and-Depicts/millionaire/blob/master/app/wwwroot/imgs/welcome.png)
+![welcome_screenshot](https://github.com/The-One-Who-Speaks-and-Depicts/millionaire/blob/master/app/wwwroot/imgs/welcome.png?raw=true)
 1. Start page is a settings screen. 
 2. In a select box one may choose number of questions to answer (from 1 to 5, by default 1).
 3. Then, to start a game, one should press "Go!" button.
@@ -10,7 +10,7 @@
 5. The top of any site page also has link to the start page.
 
 ## Game page
-![game_screenshot](https://github.com/The-One-Who-Speaks-and-Depicts/millionaire/blob/master/app/wwwroot/imgs/game.png)
+![game_screenshot](https://github.com/The-One-Who-Speaks-and-Depicts/millionaire/blob/master/app/wwwroot/imgs/game.png?raw=true)
 1. Game page depicts your current score, button "50:50", question text, answers, buttons "Submit answer" and "Start over".
 2. Current score increases by 1 000 000 / amount of questions each answer.
 3. To choose the answer, press a circle to the left side of it.
