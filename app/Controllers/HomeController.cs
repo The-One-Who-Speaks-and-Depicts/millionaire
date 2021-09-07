@@ -42,7 +42,7 @@ namespace millionaire.Controllers
         {
             switch (submit)
             {
-                case "Fifty":
+                case "50:50":
                     game.fifty_fifty_used = "Now";
                     break;
                 case "Answer":

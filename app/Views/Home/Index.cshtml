@@ -7,7 +7,7 @@
 <div class="text-center">
     <div>
         <h1 class="display-4">Wanna become a millionaire?</h1>
-        <p>Probably, firstly you should the <a asp-area="" asp-controller="Home" asp-action="Rules">rules</a>.</p>
+        <p>Probably, firstly you should the <a class="link" asp-area="" asp-controller="Home" asp-action="Rules">rules</a>.</p>
         <p>If ready to try your luck, choose, how many questions you want to be asked.</p>        
     </div>
     <form asp-controller="Home" asp-action="Game">
@@ -16,7 +16,7 @@
             {
                 <option>@i</option>
             }
-        </select>
-        <button class="btn btn-primary">Go!</button>
+        </select><br />
+        <button class="button-nav">Go!</button>
     </form>
 </div>
