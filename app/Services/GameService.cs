@@ -18,7 +18,7 @@ namespace millionaire.Services
         }
         public Game GetGame(int amount, IQuestionService _questionService, IAnswerService _answerService) => _gameRepo.GetGame(amount, _questionService, _answerService);
 
-        public Game CheckAnswer(Game game, int? chosenAnswer, int amount)
+        public void CheckAnswer(Game game, int? chosenAnswer, int amount)
         {
             if (game.answers.Where(x => x.Id == chosenAnswer).First().correct == "True")
             {
@@ -28,35 +28,33 @@ namespace millionaire.Services
             {
                 GameOver(game);
             }
-            return game;
         }
 
 
-        public Game GameOver(Game game)
+        public void GameOver(Game game)
         {
             game.gameOver = true;
             game.result = "You lost!";
-            return game;
         }
 
-        public Game SwitchFiftyFiftyState(Game game, string submit) 
+        public void SwitchFiftyFiftyState(Game game, string submit) 
         {
             switch (submit) 
             {
                 case "50:50":
                     game.fifty_fifty_used = "Now";
-                    return game;
+                    break;
                 case "Answer":
                 default:
                     if (game.fifty_fifty_used == "Now")
                     {
                         game.fifty_fifty_used = "Yes";
                     }
-                    return game;
+                    break;
             }
         }
 
-        public Game Step(Game game, int _amount)
+        public void Step(Game game, int _amount)
         {
             game.amount = _amount;
             if (game.score < Game.maxScore)
@@ -72,7 +70,6 @@ namespace millionaire.Services
                 game.questions = game.questions.Where(x => x != game.questions[0]).ToList();
             }
             if (game.score == Game.maxScore) game.result = "You won!";
-            return game;
         }
     }
 }
