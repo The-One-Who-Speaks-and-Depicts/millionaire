@@ -16,7 +16,10 @@ namespace tests
         public void IndexTest()
         {
             var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
+            var questionService = new Mock<IQuestionService>();
+            var answerService = new Mock<IAnswerService>();
+            var gameService = new Mock<IGameService>();
+            HomeController hc = new(logger.Object, questionService, answerService, gameService);
 
             var indexPage = hc.Index();
 
