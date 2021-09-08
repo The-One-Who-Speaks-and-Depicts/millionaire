@@ -14,14 +14,16 @@ namespace millionaire.Controllers
     public class HomeController : Controller
     {        
         private readonly ILogger<HomeController> _logger;
-        private static SQLiteQuestionService questionService;
-        private static SQLiteAnswerService answerService;
+        private static IQuestionService _questionService;
+        private static IAnswerService _answerService;
 
         private static Game game;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IQuestionService questionService, IAnswerService answerService)
         {
             _logger = logger;
+            _questionService = questionService;
+            _answerService = answerService;
         }
 
         public IActionResult Index()
@@ -38,71 +40,32 @@ namespace millionaire.Controllers
             return View();
         }
 
-        public IActionResult Game(int amount, string submit, string defaultAnswer = "") 
+        int? GetUserAnswer()
         {
-            switch (submit)
+            try 
             {
-                case "50:50":
-                    game.fifty_fifty_used = "Now";
-                    break;
-                case "Answer":
-                default:                    
-                    if (game == null) 
-                    {
-                        game = new Game(amount);
-                        questionService = new(new SQLiteQuestionRepository());
-                        answerService = new(new SQLiteAnswerRepository());
-                        game.questions = questionService.GetGivenAmountOfQuestions(amount);
-                        game.answers = answerService.GetGivenAmountOfAnswers(game.questions.Select(x => x.Id).ToList()); 
-                    }
-                    else
-                    {
-                        if (game.fifty_fifty_used == "Now") {
-                            game.fifty_fifty_used = "Yes";
-                        }
-                        string userAnswer;
-                        try 
-                        {
-                            userAnswer = Request.Form["user-answer"].ToString();
-                        }
-                        catch (Exception)
-                        {
-                            userAnswer = defaultAnswer;
-                        }
-                        if (String.IsNullOrEmpty(userAnswer)) return View(game);
-                        int chosenAnswer = Convert.ToInt32(userAnswer);
-                        if (game.answers.Where(x => x.Id == chosenAnswer).First().correct == "True")
-                        {
-                            game.amount = amount;
-                            if (game.score < millionaire.Models.Game.maxScore)
-                            {
-                                game.score += game.step;
-                                if (millionaire.Models.Game.maxScore - game.score == game.mod)
-                                {
-                                    game.score = millionaire.Models.Game.maxScore;
-                                }
-                            }                
-                            else 
-                            {
-                                game = null;
-                                return Redirect("/Home/Index");
-                            }                
-                            if (game.questions.Count > 1)
-                            {
-                                game.questions = game.questions.Where(x => x != game.questions[0]).ToList();
-                            }
-                            if (game.score == millionaire.Models.Game.maxScore) game.result = "You won!";
-                        }
-                        else 
-                        {
-                            game.gameOver = true;
-                            game.result = "You lost!";
-                        }                                
-                    }
-                    break;
-            }            
-            
-            return View(game);
+               return Convert.ToInt32(Request.Form["user-answer"].ToString());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+        public IActionResult Game(int amount, string submit) 
+        {            
+            if (game == null) 
+            {
+                game = new Game(amount, _questionService,_answerService);
+                return View(game);
+            }
+            game.SwitchFiftyFiftyState(submit);
+            if (game.score == millionaire.Models.Game.maxScore) return Redirect("/Home/Index");
+            int? chosenAnswer = GetUserAnswer();      
+            if (chosenAnswer == null) return View(game); 
+            game.CheckAnswer(chosenAnswer, amount);  
+            return View(game);            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
