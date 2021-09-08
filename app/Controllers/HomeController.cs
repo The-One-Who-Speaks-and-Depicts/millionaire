@@ -62,11 +62,11 @@ namespace millionaire.Controllers
                 game = _gameService.GetGame(amount, _questionService, _answerService);
                 return View(game);
             }
-            game = _gameService.SwitchFiftyFiftyState(game, submit);
+            _gameService.SwitchFiftyFiftyState(game, submit);
             if (game.score == millionaire.Models.Game.maxScore) return Redirect("/Home/Index");
             int? chosenAnswer = GetUserAnswer();      
             if (chosenAnswer == null) return View(game); 
-            game = _gameService.CheckAnswer(game, chosenAnswer, amount);  
+            _gameService.CheckAnswer(game, chosenAnswer, amount);  
             return View(game);            
         }
 

@@ -7,6 +7,8 @@ using System.Reflection;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using millionaire.Services;
+using millionaire.Repos;
 
 namespace tests
 {
@@ -19,7 +21,7 @@ namespace tests
             var questionService = new Mock<IQuestionService>();
             var answerService = new Mock<IAnswerService>();
             var gameService = new Mock<IGameService>();
-            HomeController hc = new(logger.Object, questionService, answerService, gameService);
+            HomeController hc = new(logger.Object, questionService.Object, answerService.Object, gameService.Object);
 
             var indexPage = hc.Index();
 
@@ -30,23 +32,30 @@ namespace tests
         public void nullGameTest_GameExists_GameNullified()
         {
             var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
+            var questionService = new Mock<IQuestionService>();
+            var answerService = new Mock<IAnswerService>();
+            var gameService = new Mock<IGameService>();
+            HomeController hc = new(logger.Object, questionService.Object, answerService.Object, gameService.Object);
             var field = typeof(HomeController).GetField("game", 
                             BindingFlags.Static | 
                             BindingFlags.NonPublic);
-            field.SetValue(null, new Game(5));                       
+            var game = new Game();
+            field.SetValue(null, game);                       
             
             hc.Index();
-            var game = field.GetValue(null);
+            var currentGame = field.GetValue(null);
 
-            Assert.Equal(null, game);
+            Assert.Null(currentGame);
         }
 
         [Fact]
         public void RulesTest()
         {
             var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
+            var questionService = new Mock<IQuestionService>();
+            var answerService = new Mock<IAnswerService>();
+            var gameService = new Mock<IGameService>();
+            HomeController hc = new(logger.Object, questionService.Object, answerService.Object, gameService.Object);
 
             var rulesPage = hc.Rules();
 
@@ -56,62 +65,44 @@ namespace tests
         [Fact]
         public void fiftyJustUsed_StateIsNow()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
-            game.fifty_fifty_used = "No";
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
+            var gameService = new GameService(new GameRepository());
+            var mockGame = new Mock<Game>().Object;
+            mockGame.fifty_fifty_used = "No";            
 
-            hc.Game(3, "Fifty");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.SwitchFiftyFiftyState(mockGame, "50:50");
             
-            Assert.Equal("Now", currentGame.fifty_fifty_used);
+            Assert.Equal("Now", mockGame.fifty_fifty_used);
         }
 
         [Fact]
         public void fiftyWasUsed_StateIsYes()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
-            game.fifty_fifty_used = "Now";
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
+            var gameService = new GameService(new GameRepository());
+            var mockGame = new Mock<Game>().Object;
+            mockGame.fifty_fifty_used = "Now";     
 
-            hc.Game(3, "Answer");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.SwitchFiftyFiftyState(mockGame, "Answer");
             
-            Assert.Equal("Yes", currentGame.fifty_fifty_used);
+            Assert.Equal("Yes", mockGame.fifty_fifty_used);
         }
+
         [Fact]
         public void fiftyNotUsed_StateIsNo()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
-            game.fifty_fifty_used = "No";
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
+            var gameService = new GameService(new GameRepository());
+            var mockGame = new Mock<Game>().Object;
+            mockGame.fifty_fifty_used = "No";
 
-            hc.Game(3, "Answer");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.SwitchFiftyFiftyState(mockGame, "Answer");
             
-            Assert.Equal("No", currentGame.fifty_fifty_used);
+            Assert.Equal("No", mockGame.fifty_fifty_used);
         }
 
         [Fact]
         public void correctAnswerCheck_falseAnswerGiven()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
+            var gameService = new GameService(new GameRepository());
+            var game = new Mock<Game>().Object;
             game.answers = new List<Answer>()
             {
                 new Answer()
@@ -143,23 +134,27 @@ namespace tests
                     questionId = 5,
                 },
             };
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
 
-            hc.Game(3, "Answer", "19");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.CheckAnswer(game, 19, 3);
             
-            Assert.Equal("You lost!", currentGame.result);
+            Assert.Equal("You lost!", game.result);
         }
-
         [Fact]
         public void correctAnswerCheck_finalApproval()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
+            var gameService = new GameService(new GameRepository());
+            var game = new Mock<Game>().Object;
+            game.questions = new List<Question>()
+            {
+                new Question {
+                    Id = 1,
+                    text = "Who loves Paris?",                    
+                },
+                new Question {
+                    Id = 2,
+                    text = "Who was the most famous German Roman commander?",
+                }
+            };
             game.answers = new List<Answer>()
             {
                 new Answer()
@@ -191,25 +186,23 @@ namespace tests
                     questionId = 5,
                 },
             };
+            game.amount = 3;
+            millionaire.Models.Game.maxScore = 1000000;
+            game.mod = millionaire.Models.Game.maxScore % game.amount;
+            game.step = millionaire.Models.Game.maxScore / game.amount;
             game.score = millionaire.Models.Game.maxScore / game.amount * (game.amount - 1);
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
-
-            hc.Game(3, "Answer", "20");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.CheckAnswer(game, 20, 3);
             
-            Assert.Equal("You won!", currentGame.result);
+            Assert.Equal("You won!", game.result);
         }
-
+        
         [Fact]
         public void correctAnswerCheck_questionListReduction()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
-            game.answers = new List<Answer>()
+            var gameService = new GameService(new GameRepository());
+            var currentGame = new Mock<Game>().Object;
+            currentGame.amount = 3;
+            currentGame.answers = new List<Answer>()
             {
                 new Answer()
                 {
@@ -240,7 +233,7 @@ namespace tests
                     questionId = 5,
                 },
             };
-            game.questions = new List<Question>()
+            currentGame.questions = new List<Question>()
             {
                 new Question {
                     Id = 1,
@@ -251,74 +244,19 @@ namespace tests
                     text = "Who was the most famous German Roman commander?",
                 }
             };
-            int count = game.questions.Count;
-            game.score = millionaire.Models.Game.maxScore / game.amount * (game.amount - 2);
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
+            int count = currentGame.questions.Count;
+            millionaire.Models.Game.maxScore = 1000000;
+            currentGame.score = millionaire.Models.Game.maxScore / currentGame.amount * (currentGame.amount - 2);
 
-            hc.Game(3, "Answer", "20");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.CheckAnswer(currentGame, 20, 4);
             
             Assert.NotEqual(count, currentGame.questions.Count);
         }
-
-        [Fact]
-        public void correctAnswerCheck_gameNullification()
-        {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
-            game.answers = new List<Answer>()
-            {
-                new Answer()
-                {
-                    Id = 17,
-                    text = "Istanbul",
-                    correct = "False",
-                    questionId = 5,
-                },
-                new Answer()
-                {
-                    Id = 18,
-                    text = "Constantinople",
-                    correct = "False",
-                    questionId = 5,
-                },
-                new Answer()
-                {
-                    Id = 19,
-                    text = "Jerusalem",
-                    correct = "False",
-                    questionId = 5,
-                },
-                new Answer()
-                {
-                    Id = 20,
-                    text = "Byzantium",
-                    correct = "True",
-                    questionId = 5,
-                },
-            };
-            game.score = millionaire.Models.Game.maxScore;
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
-
-            hc.Game(3, "Answer", "20");
-            var currentGame = (Game)field.GetValue(null);
-            
-            Assert.Null(currentGame);
-        }
-
         [Fact]
         public void correctAnswerCheck_finalAdditionInFloatDivisionCase()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
+            var gameService = new GameService(new GameRepository());
+            var game = new Mock<Game>().Object;
             game.answers = new List<Answer>()
             {
                 new Answer()
@@ -361,25 +299,24 @@ namespace tests
                     text = "Who was the most famous German Roman commander?",
                 }
             };
+            game.amount = 3;
+            millionaire.Models.Game.maxScore = 1000000;
+            game.mod = millionaire.Models.Game.maxScore % game.amount;
+            game.step = millionaire.Models.Game.maxScore / game.amount;
             game.score = millionaire.Models.Game.maxScore / game.amount * (game.amount - 1);
             int score = game.score;
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
 
-            hc.Game(3, "Answer", "20");
-            var currentGame = (Game)field.GetValue(null);
-            
-            Assert.NotEqual(score, millionaire.Models.Game.maxScore - currentGame.step);
+            gameService.Step(game, 3);
+
+            Assert.NotEqual(score, millionaire.Models.Game.maxScore - game.step);
         }
 
         [Fact]
         public void correctAnswerCheck_StepAddition()
         {
-            var logger = new Mock<ILogger<HomeController>>();
-            HomeController hc = new(logger.Object);
-            var game = new Game(3);
+            var gameService = new GameService(new GameRepository());
+            var game = new Mock<Game>().Object;
+            game.amount = 5;
             game.answers = new List<Answer>()
             {
                 new Answer()
@@ -422,17 +359,76 @@ namespace tests
                     text = "Who was the most famous German Roman commander?",
                 }
             };
-            game.score = millionaire.Models.Game.maxScore / game.amount;
+            millionaire.Models.Game.maxScore = 1000000;
+            game.mod = millionaire.Models.Game.maxScore % game.amount;
+            game.step = millionaire.Models.Game.maxScore / game.amount;
+            game.score = millionaire.Models.Game.maxScore / game.amount * (game.amount - 1);
             int score = game.score;
-            var field = typeof(HomeController).GetField("game", 
-                            BindingFlags.Static | 
-                            BindingFlags.NonPublic);
-            field.SetValue(null, game);
 
-            hc.Game(5, "Answer", "20");
-            var currentGame = (Game)field.GetValue(null);
+            gameService.Step(game, 5);
             
-            Assert.Equal(score + currentGame.step, currentGame.score);
+            Assert.Equal(score + game.step, game.score);
+        }
+
+        [Fact]
+        public void correctAnswerCheck_gameNullification()
+        {
+            var logger = new Mock<ILogger<HomeController>>().Object;
+            var questionService = new Mock<IQuestionService>().Object;
+            var answerService = new Mock<IAnswerService>().Object;            
+            var gameService = new GameService(new GameRepository());
+            var mockController = new Mock<HomeController>(logger, questionService, answerService, gameService).Object;
+            var game = new Mock<Game>().Object;
+            game.answers = new List<Answer>()
+            {
+                new Answer()
+                {
+                    Id = 17,
+                    text = "Istanbul",
+                    correct = "False",
+                    questionId = 5,
+                },
+                new Answer()
+                {
+                    Id = 18,
+                    text = "Constantinople",
+                    correct = "False",
+                    questionId = 5,
+                },
+                new Answer()
+                {
+                    Id = 19,
+                    text = "Jerusalem",
+                    correct = "False",
+                    questionId = 5,
+                },
+                new Answer()
+                {
+                    Id = 20,
+                    text = "Byzantium",
+                    correct = "True",
+                    questionId = 5,
+                },
+            };
+            game.questions = new List<Question>()
+            {
+                new Question {
+                    Id = 1,
+                    text = "Who loves Paris?",                    
+                },
+                new Question {
+                    Id = 2,
+                    text = "Who was the most famous German Roman commander?",
+                }
+            };
+            game.score = 1000000;
+            Type type = typeof(HomeController);
+            FieldInfo info = type.GetField("game", BindingFlags.NonPublic | BindingFlags.Static);
+            info.SetValue(null, game);
+
+            mockController.Index();
+            
+            Assert.Null(info.GetValue(null));
         }
     }
 }
