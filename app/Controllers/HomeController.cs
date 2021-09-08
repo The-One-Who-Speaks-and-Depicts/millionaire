@@ -16,14 +16,16 @@ namespace millionaire.Controllers
         private readonly ILogger<HomeController> _logger;
         private static IQuestionService _questionService;
         private static IAnswerService _answerService;
+        private static IGameService _gameService;
 
         private static Game game;
 
-        public HomeController(ILogger<HomeController> logger, IQuestionService questionService, IAnswerService answerService)
+        public HomeController(ILogger<HomeController> logger, IQuestionService questionService, IAnswerService answerService, IGameService gameService)
         {
             _logger = logger;
             _questionService = questionService;
             _answerService = answerService;
+            _gameService = gameService;
         }
 
         public IActionResult Index()
@@ -57,7 +59,7 @@ namespace millionaire.Controllers
         {            
             if (game == null) 
             {
-                game = new Game(amount, _questionService,_answerService);
+                game = _gameService.GetGame(amount, _questionService, _answerService);
                 return View(game);
             }
             game.SwitchFiftyFiftyState(submit);

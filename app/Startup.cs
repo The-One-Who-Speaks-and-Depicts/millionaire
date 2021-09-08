@@ -29,6 +29,8 @@ namespace millionaire
             services.AddTransient<IAnswerService, SQLiteAnswerService>();
             services.AddTransient<IQuestionRepository, SQLiteQuestionRepository>();
             services.AddTransient<IAnswerRepository, SQLiteAnswerRepository>();
+            services.AddTransient<IGameRepository, GameRepository>();
+            services.AddTransient<IGameService, GameService>();
             services.AddControllersWithViews();
         }
 
