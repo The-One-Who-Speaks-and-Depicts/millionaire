@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using millionaire.Services;
+using millionaire.Repos;
 
 namespace millionaire
 {
@@ -23,6 +25,10 @@ namespace millionaire
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IQuestionService, SQLiteQuestionService>();
+            services.AddTransient<IAnswerService, SQLiteAnswerService>();
+            services.AddTransient<IQuestionRepository, SQLiteQuestionRepository>();
+            services.AddTransient<IAnswerRepository, SQLiteAnswerRepository>();
             services.AddControllersWithViews();
         }
 
